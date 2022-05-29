@@ -4,7 +4,7 @@ from torch import nn
 
 from utils import get_device
 from torch.utils.tensorboard import SummaryWriter
-from models import CNN, CNNLarger, NeuralNetwork, NeuralNetworkWider, NeuralNetworkDeeper
+from models import CNN, CNN_Relu, CNN_Sigmoid, CNN_Tanh, CNNLarger, NeuralNetwork, NeuralNetworkWider, NeuralNetworkDeeper
 from data import fashion_mnist_train_test_dataloader
 
 DEFAULT_EPOCHS = 5
@@ -133,4 +133,26 @@ class Runner(object):
                     print(f'Epoch {epoch}\n------------------------------')
                     self.train(train_dataloader, epoch)
                     self.test(test_dataloader, epoch)
-            
+    
+    def run2(self):
+        batch_size = 128
+        train_dataloader, test_dataloader = fashion_mnist_train_test_dataloader(batch_size)
+        epoches = 30
+
+        models = [
+            CNN_Relu().to(self.device), 
+            CNN_Sigmoid().to(self.device), 
+            CNN_Tanh().to(self.device),
+        ]
+
+        for model in models:
+            print(model)
+            self.model = model
+            self.optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-3) # Fixed optimizer
+
+            self.writer = SummaryWriter(log_dir=f'reports/{self.model.__class__.__name__}')
+            self.writer.add_custom_scalars(layout=CUSTOM_LAYOUT)
+            for epoch in range(1, epoches + 1):
+                print(f'Epoch {epoch}\n------------------------------')
+                self.train(train_dataloader, epoch)
+                self.test(test_dataloader, epoch)

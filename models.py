@@ -136,3 +136,75 @@ class CNN(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return self.logits(x)
+
+
+class CNN_Relu(nn.Module): 
+    """Same as CNN, just rename its class to generate a separate report
+    """
+    def __init__(self):
+        super(CNN_Relu, self).__init__()
+        self.conv1 = nn.Conv2d(1, 6, 5)
+        self.bn1 = nn.BatchNorm2d(6)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.bn2 = nn.BatchNorm2d(16)
+        self.fc1 = nn.Linear(16 * 4 * 4, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+        self.logits = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        x = self.pool(self.bn1(F.relu(self.conv1(x))))
+        x = self.pool(self.bn2(F.relu(self.conv2(x))))
+
+        x = x.view(-1, 16 * 4 * 4)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return self.logits(x)
+
+class CNN_Sigmoid(nn.Module):
+    def __init__(self):
+        super(CNN_Sigmoid, self).__init__()
+        self.conv1 = nn.Conv2d(1, 6, 5)
+        self.bn1 = nn.BatchNorm2d(6)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.bn2 = nn.BatchNorm2d(16)
+        self.fc1 = nn.Linear(16 * 4 * 4, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+        self.logits = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        x = self.pool(self.bn1(F.sigmoid(self.conv1(x))))
+        x = self.pool(self.bn2(F.sigmoid(self.conv2(x))))
+
+        x = x.view(-1, 16 * 4 * 4)
+        x = F.sigmoid(self.fc1(x))
+        x = F.sigmoid(self.fc2(x))
+        x = self.fc3(x)
+        return self.logits(x)
+
+class CNN_Tanh(nn.Module):
+    def __init__(self):
+        super(CNN_Tanh, self).__init__()
+        self.conv1 = nn.Conv2d(1, 6, 5)
+        self.bn1 = nn.BatchNorm2d(6)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.bn2 = nn.BatchNorm2d(16)
+        self.fc1 = nn.Linear(16 * 4 * 4, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+        self.logits = nn.Softmax(dim=1)
+
+    def forward(self, x):
+        x = self.pool(self.bn1(F.tanh(self.conv1(x))))
+        x = self.pool(self.bn2(F.tanh(self.conv2(x))))
+
+        x = x.view(-1, 16 * 4 * 4)
+        x = F.tanh(self.fc1(x))
+        x = F.tanh(self.fc2(x))
+        x = self.fc3(x)
+        return self.logits(x)
