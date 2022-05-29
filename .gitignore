@@ -2,3 +2,6 @@
 __pycache__
 data
 runs
+.DS_Store
+reports
+reports_bak
